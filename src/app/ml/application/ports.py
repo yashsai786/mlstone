@@ -44,3 +44,17 @@ class EvaluationReporterPort(ABC):
     def save_report(self, report: EvaluationReport, path: str) -> str:
         """Saves the evaluation report to disk."""
         pass
+
+
+class InferencePort(ABC):
+    """
+    Port for running machine learning color classification inference.
+    """
+    @abstractmethod
+    def predict(
+        self,
+        image_input: Any,
+        top_k: int = 3
+    ) -> StoneClassification:
+        """Runs color classification inference."""
+        pass

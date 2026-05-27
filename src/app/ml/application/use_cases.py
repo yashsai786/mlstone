@@ -1,8 +1,15 @@
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 
-from src.app.ml.application.ports import ModelStoragePort, EvaluationReporterPort
-from src.app.ml.domain.models import EvaluationReport, TrainingMetadata
+from src.app.application.ports import ImageDownloaderPort, SlabDetectorPort
+from src.app.ml.application.ports import ModelStoragePort, EvaluationReporterPort, InferencePort
+from src.app.ml.domain.models import (
+    EvaluationReport, TrainingMetadata, PredictionRequest,
+    PredictionCandidate, PredictionResult
+)
+from src.app.domain.exceptions import (
+    DownloadError, InvalidImageError, SlabDetectionError, InferenceError
+)
 from src.app.ml.infrastructure.dataset import get_stratified_loaders
 from src.app.ml.infrastructure.transforms import get_transforms
 from src.app.ml.infrastructure.model import get_efficientnet_model
@@ -161,3 +168,96 @@ class EvaluateModelUseCase:
         )
 
         return report, report_save_path
+
+
+class PredictStoneColorUseCase:
+    """
+    Application orchestrator for the complete stone color prediction API workflow.
+    Validates inputs, downloads images, processes/crops slabs, and runs ML inference.
+    """
+    def __init__(
+        self,
+        downloader: ImageDownloaderPort,
+        slab_detector: SlabDetectorPort,
+        inference_service: InferencePort,
+        model_version: str = "1.0.0"
+    ):
+        self.downloader = downloader
+        self.slab_detector = slab_detector
+        self.inference_service = inference_service
+        self.model_version = model_version
+
+    async def execute(self, request: PredictionRequest) -> PredictionResult:
+        import time
+        import cv2
+        import numpy as np
+
+        start_time = time.time()
+
+        # 1. Validate URL Input
+        url = request.image_url.strip()
+        if not url or not (url.startswith("http://") or url.startswith("https://")):
+            raise DownloadError("Invalid image URL format provided.")
+
+        # 2. Download Image bytes asynchronously
+        try:
+            image_bytes = await self.downloader.download(url)
+        except (DownloadError, InvalidImageError) as e:
+            # Propagate custom domain exceptions directly
+            raise e
+        except Exception as e:
+            raise DownloadError(f"Unexpected image download failure: {e}")
+
+        # 3. Decode image bytes to OpenCV numpy array
+        try:
+            nparr = np.frombuffer(image_bytes, np.uint8)
+            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            if img is None or img.size == 0:
+                raise InvalidImageError("Downloaded image could not be decoded.")
+        except Exception as e:
+            if isinstance(e, InvalidImageError):
+                raise e
+            raise InvalidImageError(f"Failed to parse downloaded image bytes: {e}")
+
+        # 4. Preprocess / Crop Slab Region
+        try:
+            regions = self.slab_detector.detect_slabs(img)
+            if not regions:
+                raise SlabDetectionError("No stone slabs detected in the image.")
+            
+            # Select best matching region
+            best_region = max(regions, key=lambda r: r.confidence)
+            
+            cropped_slab = self.slab_detector.crop_slab(img, best_region)
+            if cropped_slab is None or cropped_slab.size == 0:
+                raise SlabDetectionError("Failed to crop stone slab region from the image.")
+        except SlabDetectionError as e:
+            raise e
+        except Exception as e:
+            raise SlabDetectionError(f"Slab preprocessing execution failed: {e}")
+
+        # 5. Run ML Inference classification
+        try:
+            classification = self.inference_service.predict(cropped_slab)
+        except Exception as e:
+            raise InferenceError(f"Model color classification inference execution failed: {e}")
+
+        # 6. Structure prediction candidates
+        top_candidates = []
+        for name, confidence in classification.top_k.items():
+            top_candidates.append(
+                PredictionCandidate(class_name=name, confidence=confidence)
+            )
+
+        # Ensure top predictions are strictly ordered by descending confidence
+        top_candidates.sort(key=lambda c: c.confidence, reverse=True)
+
+        processing_duration_ms = (time.time() - start_time) * 1000.0
+
+        return PredictionResult(
+            predicted_color=classification.predicted_class,
+            confidence=classification.confidence,
+            top_predictions=top_candidates,
+            processing_time_ms=processing_duration_ms,
+            model_version=self.model_version
+        )

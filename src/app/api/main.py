@@ -1,12 +1,21 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import uuid
-from typing import Dict, Any, Optional
+from pathlib import Path
+from typing import Dict, Any, Optional, List
+
 from src.app.infrastructure.config import get_config
 from src.app.infrastructure.logging import setup_logging, get_logger
 from src.app.messaging.connection import AsynchronousZMQClient
-from src.app.domain.exceptions import MessagingError
+from src.app.domain.exceptions import (
+    MessagingError, DownloadError, InvalidImageError, SlabDetectionError, InferenceError
+)
+from src.app.preprocessing.pipeline import OpenCVPipeline
+from src.app.dataset.services.downloader import DownloaderService
+from src.app.ml.inference.service import StoneColorInferenceService
+from src.app.ml.application.use_cases import PredictStoneColorUseCase
+from src.app.ml.domain.models import PredictionRequest as DomainPredictionRequest
 
 # Setup logging
 setup_logging()
@@ -57,6 +66,27 @@ class SlabExtractionResponse(BaseModel):
     cropped_image_path: str
     request_id: str
     metadata: Dict[str, Any]
+
+
+class ColorPredictionRequest(BaseModel):
+    image_url: str
+
+
+class TopPredictionCandidate(BaseModel):
+    class_: str = Field(..., alias="class")
+    confidence: float
+
+    class Config:
+        allow_population_by_field_name = True
+        populate_by_name = True
+
+
+class ColorPredictionResponse(BaseModel):
+    predicted_color: str
+    confidence: float
+    top_predictions: List[TopPredictionCandidate]
+    processing_time_ms: int
+    model_version: Optional[str] = None
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
@@ -115,3 +145,105 @@ async def extract_slab(request: SlabExtractionRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected internal error occurred: {e}"
         )
+
+
+predictor_use_case: Optional[PredictStoneColorUseCase] = None
+
+
+def get_predictor_use_case() -> PredictStoneColorUseCase:
+    """Lazily loads and returns the PredictStoneColorUseCase instance."""
+    global predictor_use_case
+    if predictor_use_case is None:
+        model_path = str(config.ml_model_dir / "stone_color_model.pt")
+        if not Path(model_path).exists():
+            logger.warning(
+                "ML model file not found during service initialization!",
+                extra={"path": model_path}
+            )
+
+        downloader = DownloaderService(
+            timeout_seconds=config.download_timeout_seconds,
+            retry_count=config.download_retry_count
+        )
+        slab_detector = OpenCVPipeline()
+        inference_service = StoneColorInferenceService(
+            model_path=model_path,
+            device="cpu"
+        )
+        predictor_use_case = PredictStoneColorUseCase(
+            downloader=downloader,
+            slab_detector=slab_detector,
+            inference_service=inference_service,
+            model_version="1.0.0"
+        )
+    return predictor_use_case
+
+
+@app.post(
+    "/predict-color",
+    response_model=ColorPredictionResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Predict Stone Color",
+    description="Downloads a stone image, localizes the slab contour, crops the region, and runs inference for color classification."
+)
+async def predict_color(request: ColorPredictionRequest):
+    logger.info("Received predict-color request", extra={"url": request.image_url})
+    
+    use_case = get_predictor_use_case()
+    domain_request = DomainPredictionRequest(image_url=request.image_url)
+
+    try:
+        result = await use_case.execute(domain_request)
+        
+        return ColorPredictionResponse(
+            predicted_color=result.predicted_color,
+            confidence=result.confidence,
+            top_predictions=[
+                TopPredictionCandidate(**{"class": c.class_name, "confidence": c.confidence})
+                for c in result.top_predictions
+            ],
+            processing_time_ms=int(round(result.processing_time_ms)),
+            model_version=result.model_version
+        )
+        
+    except DownloadError as e:
+        logger.error("Download failure in predict color endpoint", extra={"url": request.image_url, "error": str(e)})
+        # Differentiate gateway timeouts from invalid hosts
+        if "timeout" in str(e).lower() or "timed out" in str(e).lower():
+            raise HTTPException(
+                status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+                detail=f"Image download timed out: {e}"
+            )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to download image from the provided URL: {e}"
+        )
+        
+    except InvalidImageError as e:
+        logger.error("Invalid or corrupt image in predict color endpoint", extra={"url": request.image_url, "error": str(e)})
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=f"Unsupported or corrupt image file: {e}"
+        )
+        
+    except SlabDetectionError as e:
+        logger.error("Slab detection failure in predict color endpoint", extra={"url": request.image_url, "error": str(e)})
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Slab preprocessing/cropping failed: {e}"
+        )
+        
+    except InferenceError as e:
+        logger.error("Inference failure in predict color endpoint", extra={"url": request.image_url, "error": str(e)})
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Model inference failed: {e}"
+        )
+        
+    except Exception as e:
+        logger.error("Unexpected failure in predict color endpoint", extra={"url": request.image_url, "error": str(e)})
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected prediction error occurred: {e}"
+        )
+

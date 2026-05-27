@@ -4,12 +4,13 @@ import cv2
 import numpy as np
 from typing import List, Optional
 from src.app.domain.exceptions import DownloadError, InvalidImageError
+from src.app.application.ports import ImageDownloaderPort
 from src.app.infrastructure.logging import get_logger
 
 logger = get_logger(__name__)
 
 
-class DownloaderService:
+class DownloaderService(ImageDownloaderPort):
     """
     Asynchronous robust image downloader supporting exponential backoff,
     strict timeouts, content-type checks, corrupt-image validation,

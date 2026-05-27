@@ -8,6 +8,7 @@ import torch
 import torchvision.transforms as T
 
 from src.app.ml.domain.models import StoneClassification
+from src.app.ml.application.ports import InferencePort
 from src.app.ml.infrastructure.adapters import PyTorchModelStorage
 from src.app.ml.infrastructure.model import get_efficientnet_model
 from src.app.infrastructure.logging import get_logger
@@ -15,7 +16,7 @@ from src.app.infrastructure.logging import get_logger
 logger = get_logger(__name__)
 
 
-class StoneColorInferenceService:
+class StoneColorInferenceService(InferencePort):
     """
     Supervises CPU/GPU standalone color inference services.
     Render deployment friendly; does not require the raw training folder structure.

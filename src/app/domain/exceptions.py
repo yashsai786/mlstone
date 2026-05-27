@@ -28,3 +28,8 @@ class MessagingError(StoneColorAppException):
 class ConfigurationError(StoneColorAppException):
     """Raised when application configuration is invalid."""
     pass
+
+
+class InferenceError(StoneColorAppException):
+    """Raised when machine learning inference fails."""
+    pass

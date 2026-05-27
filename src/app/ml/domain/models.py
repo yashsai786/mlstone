@@ -43,3 +43,32 @@ class TrainingMetadata:
     idx_to_class: Dict[int, str]
     model_version: str = "1.0.0"
     trained_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+
+
+@dataclass(frozen=True)
+class PredictionRequest:
+    """
+    Pure domain model representing the input request structure.
+    """
+    image_url: str
+
+
+@dataclass(frozen=True)
+class PredictionCandidate:
+    """
+    Pure domain model representing a single prediction probability candidate.
+    """
+    class_name: str
+    confidence: float
+
+
+@dataclass(frozen=True)
+class PredictionResult:
+    """
+    Pure domain model representing the comprehensive prediction output.
+    """
+    predicted_color: str
+    confidence: float
+    top_predictions: List[PredictionCandidate]
+    processing_time_ms: float
+    model_version: Optional[str] = None
