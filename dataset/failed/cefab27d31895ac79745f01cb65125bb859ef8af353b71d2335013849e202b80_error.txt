@@ -1,0 +1,4 @@
+URL: https://iblocky.work/mondial-granit/mondial-granit/MGAR03\\26/Bundle/11_ARFANOTTI26_03-011_v1776937593.webp
+Category: grey
+Source file: dataset/Grey/grey.txt
+Failure Reason: HTTP error status: 404

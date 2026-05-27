@@ -1,0 +1,212 @@
+[
+    {
+        "image_path": "processed_dataset/grey/df11eb0a7f9ed83062cb3e072e85908fb2a687acf19e0f918a8898fa476dd36e.png",
+        "true_label": "grey",
+        "predicted_label": "gold",
+        "confidence": 0.6109448671340942
+    },
+    {
+        "image_path": "processed_dataset/pink_rose/1cbdfdaed46b9858e80faec97f76640460d0abf1bd63bc6094c77bd46e11b9f1.png",
+        "true_label": "pink_rose",
+        "predicted_label": "beige",
+        "confidence": 0.3339676856994629
+    },
+    {
+        "image_path": "processed_dataset/grey/29cd8397ce58b25d67d98e704b88dddb5b440b8160a4517f78525bf131baff9e.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.9573508501052856
+    },
+    {
+        "image_path": "processed_dataset/grey/026525877b974fb4be9450112762ff6bf747a95b3b53375998486e3b1d460a13.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.8910725712776184
+    },
+    {
+        "image_path": "processed_dataset/grey/5dba1d86622dc2ca797195e3a3c621e7d26b02cd59aab879b8b837d8bd8450ba.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.3173891603946686
+    },
+    {
+        "image_path": "processed_dataset/grey/561883faf1f4c44f1e4284b2fe7986c15a812dffdc0f50fb9b0d830921a2f054.png",
+        "true_label": "grey",
+        "predicted_label": "black",
+        "confidence": 0.5570625066757202
+    },
+    {
+        "image_path": "processed_dataset/white/e8027146ebc6f46d9e0d1a9efda440810a1802f72b209e63e8f048cf722365e8.png",
+        "true_label": "white",
+        "predicted_label": "beige",
+        "confidence": 0.5915316939353943
+    },
+    {
+        "image_path": "processed_dataset/beige/97c0c3edf6ad4382ee44a5132f9d40ca7222d6542fdf1287a56471f375144027.png",
+        "true_label": "beige",
+        "predicted_label": "gold",
+        "confidence": 0.5952635407447815
+    },
+    {
+        "image_path": "processed_dataset/grey/85527ccb31fb36cd03698ecc4130ce09f64a3ffecb65d4087f79094b949fb9ed.png",
+        "true_label": "grey",
+        "predicted_label": "black",
+        "confidence": 0.3325488865375519
+    },
+    {
+        "image_path": "processed_dataset/beige/22c77406520d49c6ab88409ede1593becd3c3abc650c4df3e97634c4895b6eb2.png",
+        "true_label": "beige",
+        "predicted_label": "grey",
+        "confidence": 0.506430983543396
+    },
+    {
+        "image_path": "processed_dataset/beige/077c2986e0902165f38824a2642646ec2bc64520ea76aa38655f708db412eeb8.png",
+        "true_label": "beige",
+        "predicted_label": "green",
+        "confidence": 0.4507821500301361
+    },
+    {
+        "image_path": "processed_dataset/grey/bc757c43a82df7c93591a3e8acd06a7a329988fc1400d0282139206e40502e5a.png",
+        "true_label": "grey",
+        "predicted_label": "white",
+        "confidence": 0.39526060223579407
+    },
+    {
+        "image_path": "processed_dataset/grey/1226c0ef15663ac82230ea30693967f1becd5e12cc07aa21113b9537e8d4fadb.png",
+        "true_label": "grey",
+        "predicted_label": "black",
+        "confidence": 0.5902753472328186
+    },
+    {
+        "image_path": "processed_dataset/grey/eebdd4fe1288d8cd783778817a71133b386d87736bad7dda8ad0c730ea8dbd96.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.46004319190979004
+    },
+    {
+        "image_path": "processed_dataset/grey/50afd9e0b009d8829c4d962872c575780dd1adfe70ff93b6e7bfd8bd2120b5a9.png",
+        "true_label": "grey",
+        "predicted_label": "gold",
+        "confidence": 0.5431333780288696
+    },
+    {
+        "image_path": "processed_dataset/grey/c7f4735c1d52c7225fa23ebac417177173fe8d7fda5274228e3ff0428766c752.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.8945834040641785
+    },
+    {
+        "image_path": "processed_dataset/grey/e65532a8bd95017a08fd2ba50ea32a4e48231ec338d2310f8110e345a8a50e15.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.7546118497848511
+    },
+    {
+        "image_path": "processed_dataset/grey/c16bdc4a712a9305dcc3af5f655cd810580b9200d003f02379a63e298e6151b9.png",
+        "true_label": "grey",
+        "predicted_label": "black",
+        "confidence": 0.6303902864456177
+    },
+    {
+        "image_path": "processed_dataset/grey/004a8672d63bfa189efb7fba3c5932e4d48b6650cc297deddd83dc0ef81771a5.png",
+        "true_label": "grey",
+        "predicted_label": "gold",
+        "confidence": 0.784561038017273
+    },
+    {
+        "image_path": "processed_dataset/gold/f7a45c7d6f5b72c2335345d93c5e8e9c2419b16d7c479bde46df1ecc487738fb.png",
+        "true_label": "gold",
+        "predicted_label": "black",
+        "confidence": 0.7186080813407898
+    },
+    {
+        "image_path": "processed_dataset/grey/e8834ea441dd4c2d2c23b5ea8ad42fb6899e32117262d73eeb98f6f4afa212e8.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.9218726754188538
+    },
+    {
+        "image_path": "processed_dataset/grey/96ea638c24b20ddce16d83f23da39190d6747789ee685359656f8a9319cbaa45.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.639613151550293
+    },
+    {
+        "image_path": "processed_dataset/grey/e67904b5dd27da27697ef1b3d34c58da75e469a0c2bde050c1410ea8f2231a81.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.6353441476821899
+    },
+    {
+        "image_path": "processed_dataset/white/38d3fb59cbea0282894175d69287f1b12e9c17c426d3ab31794e9724edc22677.png",
+        "true_label": "white",
+        "predicted_label": "grey",
+        "confidence": 0.6093292832374573
+    },
+    {
+        "image_path": "processed_dataset/grey/3beefbc0811d2f15e1f83082235711a6905e9f72c1b7cd8a272b38d235b613c7.png",
+        "true_label": "grey",
+        "predicted_label": "gold",
+        "confidence": 0.4703178405761719
+    },
+    {
+        "image_path": "processed_dataset/grey/7f7105da4a7d55a3a791a715928b56665717042f42d74a06659adcbf9928a802.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.9273973107337952
+    },
+    {
+        "image_path": "processed_dataset/gold/8addab83237cbdd3f4a64496281d35b4aa1b7cecdbde7c83c30ca51530845d53.png",
+        "true_label": "gold",
+        "predicted_label": "orange",
+        "confidence": 0.8639252781867981
+    },
+    {
+        "image_path": "processed_dataset/orange/27ab0e0ffaa26059435241cff71cc42a6fc2068b0763875702489944c7e76504.png",
+        "true_label": "orange",
+        "predicted_label": "beige",
+        "confidence": 0.7196540236473083
+    },
+    {
+        "image_path": "processed_dataset/grey/a0adfd8352513b35fe4a6caa8f841003a287b32c03f8049304e85f8bb9125b79.png",
+        "true_label": "grey",
+        "predicted_label": "black",
+        "confidence": 0.9281992316246033
+    },
+    {
+        "image_path": "processed_dataset/white/1196c1533f94fb4f48a25a82fbf87bfd06cbd98acd06cf2bb7903d7760ffe8fe.png",
+        "true_label": "white",
+        "predicted_label": "grey",
+        "confidence": 0.7869093418121338
+    },
+    {
+        "image_path": "processed_dataset/gold/abae68847225d8a4b115a6b1c21e39a9cddf8e6199746cfc2953ce610a26dfff.png",
+        "true_label": "gold",
+        "predicted_label": "beige",
+        "confidence": 0.5499345064163208
+    },
+    {
+        "image_path": "processed_dataset/grey/680b066da0b6405855700c9545bcb3f09f4e0b06ba450e7d6bceb376892b6089.png",
+        "true_label": "grey",
+        "predicted_label": "black",
+        "confidence": 0.3802090883255005
+    },
+    {
+        "image_path": "processed_dataset/grey/ab5344a392c50309d3d311d506e7eb48f9dfb99222cf038d6eb84ef02dde8bf0.png",
+        "true_label": "grey",
+        "predicted_label": "black",
+        "confidence": 0.92681884765625
+    },
+    {
+        "image_path": "processed_dataset/grey/246f83419a2656e30620b107039f89b98ef067b919064598351b41bf2d1113af.png",
+        "true_label": "grey",
+        "predicted_label": "green",
+        "confidence": 0.7039543390274048
+    },
+    {
+        "image_path": "processed_dataset/grey/1caac1d65a1ff4af2b0ecb07ca4e7a744f015085b42e9feec516f9cd8650be75.png",
+        "true_label": "grey",
+        "predicted_label": "beige",
+        "confidence": 0.9091083407402039
+    }
+]

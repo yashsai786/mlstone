@@ -1,0 +1,4 @@
+URL: https://www.kaunited.com/luxury-stone/rose-quartz-slabs.html
+Category: pink_rose
+Source file: dataset/Pink_Rose/pinkrose.txt
+Failure Reason: Rejecting non-image Content-Type: 'text/html'

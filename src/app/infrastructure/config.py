@@ -35,6 +35,49 @@ class AppConfig:
         default_factory=lambda: os.getenv("DEBUG_MODE", "True").lower() in ("true", "1", "yes")
     )
 
+    # Dataset Ingestion Settings
+    dataset_base_dir: Path = field(
+        default_factory=lambda: Path(os.getenv("DATASET_BASE_DIR", "./dataset"))
+    )
+    processed_dataset_dir: Path = field(
+        default_factory=lambda: Path(os.getenv("PROCESSED_DATASET_DIR", "./processed_dataset"))
+    )
+    dataset_concurrency: int = field(
+        default_factory=lambda: int(os.getenv("DATASET_CONCURRENCY", "4"))
+    )
+    output_image_size: int = field(
+        default_factory=lambda: int(os.getenv("OUTPUT_IMAGE_SIZE", "224"))
+    )
+    download_retry_count: int = field(
+        default_factory=lambda: int(os.getenv("DOWNLOAD_RETRY_COUNT", "3"))
+    )
+
+    # ML Bounded Context Settings
+    ml_model_dir: Path = field(
+        default_factory=lambda: Path(os.getenv("ML_MODEL_DIR", "./models"))
+    )
+    ml_reports_dir: Path = field(
+        default_factory=lambda: Path(os.getenv("ML_REPORTS_DIR", "./reports"))
+    )
+    ml_batch_size: int = field(
+        default_factory=lambda: int(os.getenv("ML_BATCH_SIZE", "32"))
+    )
+    ml_epochs: int = field(
+        default_factory=lambda: int(os.getenv("ML_EPOCHS", "10"))
+    )
+    ml_learning_rate: float = field(
+        default_factory=lambda: float(os.getenv("ML_LEARNING_RATE", "0.001"))
+    )
+    ml_dropout: float = field(
+        default_factory=lambda: float(os.getenv("ML_DROPOUT", "0.3"))
+    )
+    ml_freeze_epochs: int = field(
+        default_factory=lambda: int(os.getenv("ML_FREEZE_EPOCHS", "2"))
+    )
+    ml_early_stopping_patience: int = field(
+        default_factory=lambda: int(os.getenv("ML_EARLY_STOPPING_PATIENCE", "3"))
+    )
+
     def __post_init__(self):
         # Create directories if they do not exist
         try:
@@ -43,6 +86,11 @@ class AppConfig:
             self.cropped_dir.mkdir(parents=True, exist_ok=True)
             self.debug_dir.mkdir(parents=True, exist_ok=True)
             self.debug_outputs_dir.mkdir(parents=True, exist_ok=True)
+            self.dataset_base_dir.mkdir(parents=True, exist_ok=True)
+            self.processed_dataset_dir.mkdir(parents=True, exist_ok=True)
+            self.failed_dir.mkdir(parents=True, exist_ok=True)
+            self.ml_model_dir.mkdir(parents=True, exist_ok=True)
+            self.ml_reports_dir.mkdir(parents=True, exist_ok=True)
         except Exception as e:
             raise ConfigurationError(f"Failed to create storage directories: {e}")
 
@@ -61,6 +109,14 @@ class AppConfig:
     @property
     def debug_outputs_dir(self) -> Path:
         return self.storage_base_dir / "debug_outputs"
+
+    @property
+    def failed_dir(self) -> Path:
+        return self.dataset_base_dir / "failed"
+
+    @property
+    def metadata_csv_path(self) -> Path:
+        return self.dataset_base_dir / "metadata.csv"
 
 
 # Global configuration instance

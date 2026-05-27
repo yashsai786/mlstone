@@ -1,0 +1,4 @@
+URL: https://iblocky.work/mondial-granit/mondial-granit/MGAR03\\26/Covers/ARFANOTTI26_03-024_v1776937595.webp
+Category: grey
+Source file: dataset/Grey/grey.txt
+Failure Reason: HTTP error status: 404

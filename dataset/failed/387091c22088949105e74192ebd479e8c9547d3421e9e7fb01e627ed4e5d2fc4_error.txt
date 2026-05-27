@@ -1,0 +1,4 @@
+URL: https://iblocky.work/mondial-granit/mondial-granit/MGQ1982/Covers/Img287_v1776940904.webp
+Category: beige
+Source file: dataset/Beige/beige.txt
+Failure Reason: HTTP error status: 404

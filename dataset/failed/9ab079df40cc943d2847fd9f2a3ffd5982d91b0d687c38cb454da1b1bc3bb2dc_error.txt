@@ -1,0 +1,4 @@
+URL: https://iblocky.work/mondial-granit/mondial-granit/MG006834/Covers/tmpgw6dgfr1_v1776960720.webp
+Category: black
+Source file: dataset/Black/black.txt
+Failure Reason: HTTP error status: 404
